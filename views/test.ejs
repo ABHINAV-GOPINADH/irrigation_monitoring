@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <title>Agriculture Monitoring App</title>
+</head>
+
+<body>
+    <div class="container text-bg-success fs-1 p-3 text-center p-0">
+        Agriculture Monitoring App
+    </div>
+    <div class="container p-0">
+        <ul class="mx-0 nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="/test">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/display">Display Data</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/pump">Pump</a>
+            </li>
+            <li class="nav-item">
+                <form action="/logout" method="post">
+                    <button type="submit" class="nav-link btn btn-link">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container p-3 bg-secondary-subtle">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div>
+                    <div class="container p-3 bg-secondary-subtle">
+                        <div class="text-center container p-2 bg-success-subtle fs-5">Sensor Data</div>
+                        <table class="table table-bordered table-hover text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Timestamp</th>
+                                    <th scope="col">Humidity (%)</th>
+                                    <th scope="col">Temperature (°C)</th>
+                                    <th scope="col">Soil Moisture (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (sensorData.length > 0) { %>
+                                    <tr>
+                                        <td><%= new Date(sensorData[sensorData.length - 1].time).toLocaleString() %></td>
+                                        <td><%= sensorData[0].humidity %> %</td>
+                                        <td><%= sensorData[0].temperature %> °C</td>
+                                        <td><%= sensorData[0].soilMoisture %> %</td>
+                                    </tr>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="4">Aucune donnée disponible</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container p-3 bg-secondary-subtle">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div>
+                    <div class="container p-3 bg-secondary-subtle">
+                        <div class="text-center container p-2 bg-success-subtle fs-5">Motor Data</div>
+                        <table class="table table-bordered table-hover text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Timestamp</th>
+                                    <th scope="col">Duration (seconds)</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% 
+                                // Affiche les moteurs dans l'ordre inverse
+                                const reversedMotors = motors.slice(-5).reverse(); 
+                                if (reversedMotors.length > 0) { 
+                                    reversedMotors.forEach(function(motor) { 
+                                %>
+                                    <tr>
+                                        <td><%= new Date(motor.timestamp).toLocaleString() %></td>
+                                        <td><%= motor.duration %></td>
+                                        <td><%= motor.status %></td>
+                                    </tr>
+                                <% }); 
+                                } else { %>
+                                    <tr>
+                                        <td colspan="3">Aucune donnée disponible</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+</body>
+</html>

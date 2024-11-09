@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist@2.12.0/plotly.min.js"></script>
+    <title>Agriculture Monitoring App</title>
+</head>
+
+<body>
+    <div class="container text-bg-success fs-1 p-3 text-center p-0">
+        Agriculture Monitoring App
+    </div>
+    <div class="container p-0">
+        <ul class="mx-0 nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="/test">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/display">Display Data</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/pump">Pump</a>
+            </li>
+            <li class="nav-item">
+                <form action="/logout" method="post">
+                    <button type="submit" class="nav-link btn btn-link">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+<div class="container p-2 bg-success-subtle fs-5">
+    Humidity
+</div>
+<div class="container p-3 bg-secondary-subtle">
+    <div id="humidityChart" style="width:100%;height:400px;"></div>
+</div>
+
+<div class="container p-2 bg-success-subtle fs-5">
+    Temperature
+</div>
+<div class="container p-3 bg-secondary-subtle">
+    <div id="temperatureChart" style="width:100%;height:400px;"></div>
+</div>
+
+<div class="container p-2 bg-success-subtle fs-5">
+   soilMoisture
+</div>
+<div class="container p-3 bg-secondary-subtle">
+    <div id="soilMoistureChart" style="width:100%;height:400px;"></div>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sensorData = <%- JSON.stringify(sensorData || []) %>;
+        console.log('Sensor Data:', sensorData); // Vérification des données
+
+        // Initialize arrays for the chart data
+        const humidityData = [];
+        const temperatureData = [];
+        const soilMoistureData = [];
+        const timeLabels = [];
+
+        // Check if sensorData is empty
+        if (sensorData.length === 0) {
+            alert("No sensor data available.");
+            document.getElementById('humidityChart').innerHTML = "<p>No humidity data available.</p>";
+            document.getElementById('temperatureChart').innerHTML = "<p>No temperature data available.</p>";
+            document.getElementById('soilMoistureChart').innerHTML = "<p>No soil moisture data available.</p>";
+        } else {
+            // Loop through sensorData and populate the arrays
+            sensorData.forEach(function(data) {
+                timeLabels.push(new Date(data.time).toLocaleTimeString());
+                humidityData.push(data.humidity);
+                temperatureData.push(data.temperature);
+                soilMoistureData.push(data.soilMoisture);
+                console.log(data.soilMoisture)
+            });
+
+            // Humidity Chart
+            const humidityTrace = {
+                x: timeLabels,
+                y: humidityData,
+                type: 'scatter',
+                mode: 'lines',
+                line: { color: 'blue' }
+            };
+            const humidityLayout = {
+                title: 'Humidity Over Time',
+                xaxis: {
+                    title: 'Time',
+                    tickformat: '%H:%M:%S'
+                },
+                yaxis: {
+                    title: 'Humidity (%)'
+                }
+            };
+            Plotly.newPlot('humidityChart', [humidityTrace], humidityLayout);
+
+            // Temperature Chart
+            const temperatureTrace = {
+                x: timeLabels,
+                y: temperatureData,
+                type: 'scatter',
+                mode: 'lines',
+                line: { color: 'red' }
+            };
+            const temperatureLayout = {
+                title: 'Temperature Over Time',
+                xaxis: {
+                    title: 'Time',
+                    tickformat: '%H:%M:%S'
+                },
+                yaxis: {
+                    title: 'Temperature (°C)'
+                }
+            };
+            Plotly.newPlot('temperatureChart', [temperatureTrace], temperatureLayout);
+
+            // Soil Moisture Chart
+            const soilMoistureTrace = {
+                x: timeLabels,
+                y: soilMoistureData,
+                type: 'scatter',
+                mode: 'lines',
+                line: { color: 'green' }
+            };
+            const soilMoistureLayout = {
+                title: 'Soil Moisture Over Time',
+                xaxis: {
+                    title: 'Time',
+                    tickformat: '%H:%M:%S'
+                },
+                yaxis: {
+                    title: 'Soil Moisture (%)'
+                }
+            };
+            Plotly.newPlot('soilMoistureChart', [soilMoistureTrace], soilMoistureLayout);
+        }
+    });
+</script>
+</body>
+</html>
