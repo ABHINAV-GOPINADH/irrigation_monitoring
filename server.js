@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 
 // AWS WebSocket API URL
-const awsWebSocketUrl = 'wss://vi6doeptq0.execute-api.ap-south-1.amazonaws.com/production/';
+const awsWebSocketUrl = 'use-your-aws-web-socket-url';
 
 let wsClient;
 
@@ -20,7 +20,7 @@ const port = 5000;
 app.set("view engine", "ejs");
 
 // MongoDB connection URI
-const uri = process.env.MONGODB_URI || 'mongodb+srv://Elie:Eliepochard123@cluster0.ol2ph.mongodb.net/sensorDatabase';
+const uri = process.env.MONGODB_URI || 'your-mongoDB-user-url';
 
 // Set up session
 app.use(session({
